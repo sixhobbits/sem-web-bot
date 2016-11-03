@@ -91,16 +91,28 @@ def complete_triple(relation, obj):
     for i, entity in enumerate(entities):
         for prop in property_codes:
             if prop in entity['entities'][entity_codes[i]]['claims']:
-                # print(prop, "found in", entity_codes[i])
+                print(prop, "found in", entity_codes[i])
                 # print(get_subjects(prop, entity, entity_codes[i]))
                 subjects = get_subjects(prop, entity, entity_codes[i])
                 print(get_labels(subjects))
 
 
+def get_sparql(query):
+    """IN:  SPARQL Query
+       OUT: JSON results of query from wikidata
+
+       Example query: SELECT ?name ?nameLabel WHERE { {wd:Q76 wdt:P22 ?name } 
+                      UNION {?name wdt:P22 wd:Q76 } . 
+                      SERVICE wikibase:label { bd:serviceParam wikibase:language "en" }}
+    """
+    url = 'https://query.wikidata.org/sparql?format=json&query={}'
+    url = url.format(query)
+    resp = requests.get(url)
+    return resp.content.decode("utf8", "ignore")
 
 
 def main():
-    print(complete_triple("father", "Obama"))
+    print(get_sparql('SELECT ?name ?nameLabel WHERE { {wd:Q76 wdt:P22 ?name } UNION {?name wdt:P22 wd:Q76 } . SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } }'))
 
 
 if __name__ == "__main__":
