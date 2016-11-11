@@ -1,0 +1,92 @@
+Who is the CEO of Apple?
+(x, CEO, Apple)
+Tim Cook
+
+Who is the Chief Executive Officer of Apple?
+(x, Chief Executive Officer, Apple)
+Tim Cook
+
+Who is the head of...?
+(x, head, Apple)
+Tim Cook
+
+Who's the Director General of...?
+(x, Director General, Apple)
+Tim Cook
+
+Who manages ...?
+(x, manages, Apple)
+Tim Cook
+
+Who is the general manager of Apple?
+(x, general manager, Apple)
+Tim Cook
+
+Who is the leader of...?
+(x, leader, Apple)
+Tim Cook
+
+What is the name of the CEO of Apple?
+(x, CEO, Apple) AND (y, name-of, x)  
+Tim Cook
+
+How is the head of Apple called?
+(x, head, Apple)
+Tim Cook
+
+Who is Apple managed by?
+(x, general manager, Apple)	
+Tim Cook
+
+
+Who is the owner of Apple?
+(x, owner, Apple)
+Arthur D. Levinsnon
+
+What are the subsidiaries of Apple?
+(x, subsidiary, Apple)
+FileMaker Inc.
+
+What companies are part of Apple?
+(x, subsidiary, Apple) AND (y, name-of, x)
+FileMaker Inc.
+	
+What does Apple produce?
+(Apple, produces, x)
+Apple TV
+
+What does Apple make?
+(Apple, makes, x)
+Apple TV
+
+What does Apple design?
+(Apple, designs, x)
+Apple TV
+
+What is the main product of Apple?
+(x, product, Apple)
+Apple TV
+
+What does Apple do?
+(Apple, produces, x)	
+Apple TV
+
+Where is Apple located? 
+(x, location, Apple)
+Cupertino, California
+
+Where is Apple situated? 
+(Apple, situated, x)
+Cupertino, California
+
+Where is Apple housed?
+(Apple, housed, x)
+Cupertino, California
+
+Where are the headquarters of Apple?
+(x, location, Apple)
+Cupertino, California
+
+What's the location of...?	
+(x, location, Apple)
+Cupertino, California
