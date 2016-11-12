@@ -2,8 +2,6 @@ import json
 
 import requests
 
-# from textblob import TextBlob
-
 BASE_URL = "https://www.wikidata.org/w/api.php?"
 
 
@@ -49,9 +47,18 @@ def get_entity(code):
     return js
 
 
+def get_objects(relation_id, sub, sub_id):
+    """IN: relation - string: the relation that we should look for in the subject
+       IN: sub      - string: the subject whose relations we search
+       IN: sub_id   - the ID of the subject whose relations we search
+       OUT: the WikiData ID of the objects for the claims
+    """
+    possible_objects = []
+
+
 def get_subjects(relation_id, obj, obj_id):
     """IN: relation - string: the relation that we should look for in claims of the object obj
-       IN: obj - string: the object for which we should search the claims
+       IN: obj      - string: the object for which we should search the claims
        OUT: the WikiData ID of the subject(s) found in the claims
 
        apple['entities']["Q312"]["claims"]["P169"][0]['mainsnak']['datavalue']['value']['i
@@ -86,21 +93,17 @@ def complete_triple(relation, obj):
     """
     property_codes = search_to_entity(relation, True)
     property_codes = [x.split(":")[1] for x in property_codes]
+
     entity_codes = search_to_entity(obj)
-
-
-    # jprint(property_codes)
-    # print(entity_codes)
-    # properties = [get_entity(code) for code in property_codes]
     entities = [get_entity(code) for code in entity_codes]
-
+    
+    print(property_codes)
+    print(entity_codes)
     # check if any of the properties are mentioned in the claims of the entities
     subject_labels = []
     for i, entity in enumerate(entities):
         for prop in property_codes:
             if prop in entity['entities'][entity_codes[i]]['claims']:
-                print(prop, "found in", entity_codes[i])
-                #  print(get_subjects(prop, entity, entity_codes[i]))
                 subjects = get_subjects(prop, entity, entity_codes[i])
                 print(get_labels(subjects))
 
@@ -123,9 +126,9 @@ def main2():
     #  print(get_sparql('SELECT ?name ?nameLabel WHERE { {wd:Q76 wdt:P22 ?name } UNION {?name wdt:P22 wd:Q76 } . SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } }'))
     triples = []
     t1 = ("father", "Obama")
-    t2 = ("CEO", "Apple")
-    t3 = ("Owner", "Apple")
-    t4 = ("product", "Apple")
+    t2 = ("locate", "Apple")
+    t3 = ("location", "Apple")
+    t4 = ("located", "Apple")
     triples.append(t1)
     triples.append(t2)
     triples.append(t3)
@@ -153,4 +156,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main2()

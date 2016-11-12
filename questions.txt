@@ -6,15 +6,15 @@ Who is the Chief Executive Officer of Apple?
 (x, Chief Executive Officer, Apple)
 Tim Cook
 
-Who is the head of...?
+Who is the head of Apple?
 (x, head, Apple)
 Tim Cook
 
-Who's the Director General of...?
+Who's the Director General of Apple?
 (x, Director General, Apple)
 Tim Cook
 
-Who manages ...?
+Who manages Apple?
 (x, manages, Apple)
 Tim Cook
 
@@ -22,7 +22,7 @@ Who is the general manager of Apple?
 (x, general manager, Apple)
 Tim Cook
 
-Who is the leader of...?
+Who is the leader of Apple?
 (x, leader, Apple)
 Tim Cook
 
@@ -35,9 +35,8 @@ How is the head of Apple called?
 Tim Cook
 
 Who is Apple managed by?
-(x, general manager, Apple)	
+(x, general manager, Apple)
 Tim Cook
-
 
 Who is the owner of Apple?
 (x, owner, Apple)
@@ -50,7 +49,7 @@ FileMaker Inc.
 What companies are part of Apple?
 (x, subsidiary, Apple) AND (y, name-of, x)
 FileMaker Inc.
-	
+
 What does Apple produce?
 (Apple, produces, x)
 Apple TV
@@ -68,7 +67,7 @@ What is the main product of Apple?
 Apple TV
 
 What does Apple do?
-(Apple, produces, x)	
+(Apple, produces, x)
 Apple TV
 
 Where is Apple located? 
@@ -87,6 +86,6 @@ Where are the headquarters of Apple?
 (x, location, Apple)
 Cupertino, California
 
-What's the location of...?	
+What's the location of Apple?
 (x, location, Apple)
 Cupertino, California
