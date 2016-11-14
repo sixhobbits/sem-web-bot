@@ -1,5 +1,4 @@
 import json
-
 import requests
 
 BASE_URL = "https://www.wikidata.org/w/api.php?"
@@ -82,8 +81,6 @@ def get_labels(subject_ids):
     return labels
 
 
-
-
 def complete_triple(relation, obj):
     """IN: Relation   - string: a natural langauge description of the relation
        IN: obj        - string: a natural language description of the object
@@ -96,9 +93,7 @@ def complete_triple(relation, obj):
 
     entity_codes = search_to_entity(obj)
     entities = [get_entity(code) for code in entity_codes]
-    
-    print(property_codes)
-    print(entity_codes)
+
     # check if any of the properties are mentioned in the claims of the entities
     subject_labels = []
     for i, entity in enumerate(entities):
@@ -106,6 +101,34 @@ def complete_triple(relation, obj):
             if prop in entity['entities'][entity_codes[i]]['claims']:
                 subjects = get_subjects(prop, entity, entity_codes[i])
                 print(get_labels(subjects))
+
+
+def build_sparql(relations, entities):
+    """IN: relations: list of relation codes
+       IN: entities:  list of entity codes
+       OUT: query:    a string of the SPARQL query to match any combination of the relation and entity
+    """
+    template = """SELECT ?x ?xLabel WHERE {{ 
+{}
+    SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en" }}
+}}"""
+
+    # build a bunch of union statements 
+    body = ""
+    first_line = True  # don't add UNION to first line'
+    for entity in entities:
+        for relation in relations:
+            line = "{{?x wdt:{} wd:{} }}\n".format(relation, entity)
+            line2 = "{{wd:{} wdt:{} ?x }}\n".format(entity, relation)
+            if first_line:
+                first_line = False
+            else:
+                body += "    UNION "
+            body += line
+            body += "    UNION"
+            body += line2
+    return template.format(body)
+
 
 
 def get_sparql(query):
@@ -126,9 +149,9 @@ def main2():
     #  print(get_sparql('SELECT ?name ?nameLabel WHERE { {wd:Q76 wdt:P22 ?name } UNION {?name wdt:P22 wd:Q76 } . SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } }'))
     triples = []
     t1 = ("father", "Obama")
-    t2 = ("locate", "Apple")
-    t3 = ("location", "Apple")
-    t4 = ("located", "Apple")
+    t2 = ("CEO", "Apple")
+    t3 = ("employer", "Tim Cook")
+    t4 = ("headquarters", "Google")
     triples.append(t1)
     triples.append(t2)
     triples.append(t3)
@@ -137,6 +160,24 @@ def main2():
         print(triple)
         complete_triple(*triple)
         print("-------------")
+
+
+def complete_triple_sparql(relation, obj):
+    property_codes = search_to_entity(relation, True)
+    property_codes = [x.split(":")[1] for x in property_codes]
+    entity_codes = search_to_entity(obj)
+
+    # build all possibilities into a sparql query
+    query = build_sparql(property_codes, entity_codes)
+
+    # get result of sparql
+    result = get_sparql(query)
+    js = json.loads(result)
+    labels = []
+    for result in js["results"]["bindings"]:
+        labels.append(result["xLabel"]["value"])
+    return labels
+
 
 def main():
     triples = []
@@ -156,4 +197,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main2()
+    print(complete_triple_sparql("director", "Harry Potter"))
