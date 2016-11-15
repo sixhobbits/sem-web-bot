@@ -100,7 +100,8 @@ def complete_triple(relation, obj):
         for prop in property_codes:
             if prop in entity['entities'][entity_codes[i]]['claims']:
                 subjects = get_subjects(prop, entity, entity_codes[i])
-                print(get_labels(subjects))
+                subject_labels += subjects
+    return subject_labels
 
 
 def build_sparql(relations, entities):
@@ -124,11 +125,10 @@ def build_sparql(relations, entities):
                 first_line = False
             else:
                 body += "    UNION "
-            body += line
-            body += "    UNION"
             body += line2
+            body += "    UNION"
+            body += line
     return template.format(body)
-
 
 
 def get_sparql(query):
@@ -145,23 +145,6 @@ def get_sparql(query):
     return resp.content.decode("utf8", "ignore")
 
 
-def main2():
-    #  print(get_sparql('SELECT ?name ?nameLabel WHERE { {wd:Q76 wdt:P22 ?name } UNION {?name wdt:P22 wd:Q76 } . SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } }'))
-    triples = []
-    t1 = ("father", "Obama")
-    t2 = ("CEO", "Apple")
-    t3 = ("employer", "Tim Cook")
-    t4 = ("headquarters", "Google")
-    triples.append(t1)
-    triples.append(t2)
-    triples.append(t3)
-    triples.append(t4)
-    for triple in triples:
-        print(triple)
-        complete_triple(*triple)
-        print("-------------")
-
-
 def complete_triple_sparql(relation, obj):
     property_codes = search_to_entity(relation, True)
     property_codes = [x.split(":")[1] for x in property_codes]
@@ -171,30 +154,14 @@ def complete_triple_sparql(relation, obj):
     query = build_sparql(property_codes, entity_codes)
 
     # get result of sparql
-    result = get_sparql(query)
-    js = json.loads(result)
+    q_result = get_sparql(query)
+    js = json.loads(q_result)
     labels = []
     for result in js["results"]["bindings"]:
-        labels.append(result["xLabel"]["value"])
+        try:
+            labels.append(result["xLabel"]["value"])
+        except KeyError as ke:
+            pass
     return labels
 
 
-def main():
-    triples = []
-    answers = []
-    with open("questions.txt") as f:
-        lines = f.read().strip().split("\n")
-        for i, line in enumerate(lines):
-            if line.startswith("("):
-                triples.append(line)
-                answers.append(lines[i+1])
-
-    for i, triple in enumerate(triples):
-        print(triple)
-        print(answers[i])
-        complete_triple(*triple)
-
-
-
-if __name__ == "__main__":
-    print(complete_triple_sparql("director", "Harry Potter"))
