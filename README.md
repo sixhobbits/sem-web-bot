@@ -1,2 +1,2 @@
 # sem-web-bot
-QA Bot for Question Answering using DBPedia
+QA Bot for Question Answering using WikiData
