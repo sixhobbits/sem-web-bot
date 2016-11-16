@@ -2,5 +2,5 @@
 
 import logging
 
-log_level = logging.DEBUG
+log_level = logging.CRITICAL
 bot_token = "216135943:AAFLGVGUJrrE2KQI08SC5-dTRtFsl-bPX64"

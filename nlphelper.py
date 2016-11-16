@@ -101,11 +101,6 @@ def get_most_nnp(nps):
     return counts_with_indices[0]
 
 
-def get_synsets(np):
-    # TODO
-    pass
-
-
 def get_index_of_entity(nps):
     # Given a list of noun phrases, this tries to work out which is the entity
     # e.g. [["headquarters"], ["Warner","Bros"]] should return 1
@@ -121,14 +116,12 @@ def get_index_of_entity(nps):
     if most_nnp[0] > 0:
         return most_nnp[1]
     
-    # otherwise, the noun phrase with the smallest synset is taken as the entity
-    # TODO
-    # otherwise guess
+    # otherwise return the last NP, as this is usually the entity
     return len(nps)-1
 
 
 def get_index_of_relation(nps):
-    return 0  # TODO
+    return 0
 
 
 def get_nouns(parsed):
@@ -157,8 +150,6 @@ def get_entity_relation_pos(np):
         logger.debug("No Possessive in noun phrase")
         return None 
     
-
-
 
 def extract_triple(sentence):
     parsed = parse(sentence)

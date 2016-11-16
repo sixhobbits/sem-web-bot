@@ -1,7 +1,14 @@
 import json
 import requests
+import logging
+import config
+
 
 BASE_URL = "https://www.wikidata.org/w/api.php?"
+
+# set up logging
+logging.basicConfig(level=config.log_level)
+logger = logging.getLogger(__name__)
 
 
 def get_url(url):
@@ -10,7 +17,7 @@ def get_url(url):
         page = response.content.decode("utf8")
         return page
     except Exception as e:
-        print(e)
+        logger.info(e)
 
 
 def search(term, properties=False):
@@ -31,7 +38,6 @@ def search_to_entity(term, properties=False):
        OUT: The entity ID for wikidata: e.g. Q42
     """
     js = search(term, properties)
-    # print(js)
     return [entity.get("title") for entity in js.get("search")]
 
 
@@ -41,7 +47,6 @@ def get_entity(code):
     """
     url = BASE_URL + "action=wbgetentities&ids={}&format=json"
     page = get_url(url.format(code))
-    # print(url.format(code))
     js = json.loads(page)
     return js
 
@@ -68,8 +73,7 @@ d']
         try:
             possible_subjects.append(entity['mainsnak']['datavalue']['value']['id'])
         except Exception as e:
-            print(e)
-
+            logger.info(e)
     return possible_subjects
 
 
@@ -128,6 +132,7 @@ def build_sparql(relations, entities):
             body += line2
             body += "    UNION"
             body += line
+    logger.debug(template.format(body))
     return template.format(body)
 
 
@@ -163,5 +168,3 @@ def complete_triple_sparql(relation, obj):
         except KeyError as ke:
             pass
     return labels
-
-
